@@ -6,13 +6,503 @@
 <meta name="theme-color" content="#15112c">
 <title>Spin & Win Rewards</title>
 <style>
-:root{--bg:#100d24;--panel:#1d1838;--text:#fff;--muted:#c6c0e3;--gold:#ffd166;--pink:#ff5c9a;--blue:#6c63ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#30205b,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-main{max-width:520px;margin:auto;padding:20px 15px 40px}.brand{text-align:center;margin:8px 0 18px}.brand .emoji{font-size:36px}.brand h1{margin:4px 0;font-size:29px;letter-spacing:.2px}.brand p{margin:0;color:var(--muted);font-size:14px}
-.panel{background:rgba(29,24,56,.94);border:1px solid #413767;border-radius:20px;padding:17px;margin:14px 0;box-shadow:0 12px 35px #0002}
-label{display:block;font-size:13px;color:var(--muted);margin:0 0 7px}input{width:100%;background:#100d24;border:1px solid #514878;border-radius:12px;padding:13px;color:white;font-size:16px;outline:none}input:focus{border-color:var(--gold)}
-.wheel-wrap{position:relative;width:min(82vw,340px);margin:5px auto 14px;aspect-ratio:1}
-.wheel{width:100%;height:100%;border-radius:50%;border:8px solid #f9d66b;box-shadow:0 0 0 5px #49366e,0 12px 30px #0006;transition:transform 4.2s cubic-bezier(.12,.72,.08,1);background:conic-gradient(#ff6384 0deg 72deg,#f9c74f 72deg 144deg,#43aa8b 144deg 216deg,#5778ff 216deg 288deg,#9b5de5 288deg 360deg);position:relative;overflow:hidden}
-.wheel span{position:absolute;left:50%;top:50%;width:48%;height:24px;transform-origin:left center;text-align:right;padding-right:10px;font-weight:800;font-size:13px;color:#fff;text-shadow:0 1px 3px #333;display:flex;align-items:center;justify-content:flex-end}
-.pointer{position:absolute;z-index:2;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-top:34px solid white;filter:drop-shadow(0 3px 3px #0006)}
-.center{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:#fff;color:#24163e;border:6px solid #f9d66b;display:grid;
+  :root {
+    --bg: #100d24;
+    --panel: #1d1838;
+    --text: #ffffff;
+    --muted: #c6c0e3;
+    --gold: #ffd166;
+    --pink: #ff5c9a;
+    --blue: #6c63ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #30205b, var(--bg) 65%);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+  main {
+    width: 100%;
+    max-width: 480px;
+    padding: 16px 14px 40px;
+  }
+  .brand { text-align: center; margin: 8px 0 16px; }
+  .brand .emoji { font-size: 38px; display: inline-block; animation: pulse 2s infinite ease-in-out; }
+  .brand h1 { margin: 4px 0 2px; font-size: 28px; letter-spacing: 0.5px; }
+  .brand p { margin: 0; color: var(--muted); font-size: 13px; }
+  
+  .panel {
+    background: rgba(29, 24, 56, 0.92);
+    border: 1px solid #413767;
+    border-radius: 20px;
+    padding: 16px;
+    margin: 14px 0;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+  }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+  input {
+    width: 100%;
+    background: #100d24;
+    border: 1px solid #514878;
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus { border-color: var(--gold); }
+
+  .wheel-wrap {
+    position: relative;
+    width: min(80vw, 320px);
+    height: min(80vw, 320px);
+    margin: 10px auto 16px;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6), 0 0 0 6px #49366e;
+  }
+  .pointer {
+    position: absolute;
+    z-index: 10;
+    left: 50%;
+    top: -12px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 28px solid #ffd166;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+  }
+  .center-cap {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #e0e0e0 100%);
+    color: #24163e;
+    border: 5px solid #f9d66b;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    pointer-events: none;
+  }
+
+  button {
+    border: 0;
+    border-radius: 13px;
+    padding: 14px 16px;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s, background 0.2s;
+  }
+  button:active { transform: scale(0.98); }
+  .spin {
+    width: 100%;
+    color: #211436;
+    background: linear-gradient(90deg, #ffd166, #ff9f68);
+    box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
+  }
+  .spin:disabled { opacity: 0.5; cursor: not-allowed; }
+  .secondary {
+    background: #302751;
+    color: white;
+    border: 1px solid #5a4c83;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row > * { flex: 1; }
+  
+  .result {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 850;
+    min-height: 28px;
+    color: var(--gold);
+    margin: 12px 0 4px;
+  }
+  .small { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .section-title { margin: 0 0 10px; font-size: 16px; }
+  
+  .history-list { max-height: 200px; overflow-y: auto; padding-right: 4px; }
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #322a52;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-item small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+  
+  .admin { display: none; margin-top: 14px; border-top: 1px solid #3d3361; padding-top: 12px; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .admin-grid input { padding: 8px 10px; font-size: 14px; }
+  .admin-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .notice { background: #130f2b; border-radius: 10px; padding: 10px; color: var(--muted); font-size: 11px; margin-top: 10px; }
+
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+</style>
+</head>
+<body>
+<main>
+  <header class="brand">
+    <div class="emoji">🎡✨</div>
+    <h1>Spin & Win</h1>
+    <p>Try your luck • Instant Demo Rewards</p>
+  </header>
+
+  <section class="panel">
+    <label for="player">Player Name</label>
+    <input id="player" maxlength="24" placeholder="Enter your name" autocomplete="name">
+  </section>
+
+  <section class="panel">
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <canvas id="wheelCanvas" width="600" height="600"></canvas>
+      <div class="center-cap">SPIN!</div>
+    </div>
+    <button class="spin" id="spinBtn">🎯 SPIN THE WHEEL</button>
+    <div class="result" id="result" aria-live="polite">Ready when you are!</div>
+    <p class="small" style="text-align:center; margin-bottom:0">Demo outcomes for entertainment purposes only.</p>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">🏆 Rewards History</h2>
+    <div id="history" class="history-list">
+      <p class="small">Your spins will appear here.</p>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="secondary" id="clearHistory">Clear History</button>
+      <button class="secondary" id="adminBtn">Admin Settings</button>
+    </div>
+
+    <div id="admin" class="admin">
+      <p class="small">Demo admin settings. PIN is <b>1234</b> by default.</p>
+      <label for="pin">Admin PIN</label>
+      <input id="pin" type="password" inputmode="numeric" placeholder="Enter PIN">
+      
+      <div id="adminControls" style="display:none; margin-top:12px">
+        <p class="small">Set relative winning chances (higher number = more likely):</p>
+        <div class="admin-grid">
+          <div><label>₹5 Chance</label><input id="w5" type="number" min="0" max="1000"></div>
+          <div><label>₹10 Chance</label><input id="w10" type="number" min="0" max="1000"></div>
+          <div><label>₹50 Chance</label><input id="w50" type="number" min="0" max="1000"></div>
+          <div><label>₹100 Chance</label><input id="w100" type="number" min="0" max="1000"></div>
+          <div style="grid-column:1/-1"><label>Better Luck Chance</label><input id="wlose" type="number" min="0" max="1000"></div>
+        </div>
+        <div class="admin-actions">
+          <button class="secondary" id="saveWeights">Save Chances</button>
+          <button class="secondary" id="changePin">Change PIN</button>
+        </div>
+      </div>
+      <div class="notice" id="adminMsg">Admin settings are stored locally on this device.</div>
+    </div>
+  </section>
+
+  <footer class="small" style="text-align:center; opacity: 0.7;">
+    Spin & Win Rewards • Offline Local Demo
+  </footer>
+</main>
+
+<script>
+const prizes = [
+  { label: "₹5", key: "w5", color: "#ff6384" },
+  { label: "₹10", key: "w10", color: "#f9c74f" },
+  { label: "₹50", key: "w50", color: "#43aa8b" },
+  { label: "₹100", key: "w100", color: "#5778ff" },
+  { label: "Better Luck", key: "wlose", color: "#9b5de5" }
+];
+
+const defaults = { w5: 35, w10: 25, w50: 12, w100: 3, wlose: 25 };
+let weights = JSON.parse(localStorage.getItem("sw_weights") || "null") || defaults;
+let history = JSON.parse(localStorage.getItem("sw_history") || "[]");
+let pinCode = localStorage.getItem("sw_pin") || "1234";
+
+const canvas = document.getElementById("wheelCanvas");
+const ctx = canvas.getContext("2d");
+const spinBtn = document.getElementById("spinBtn");
+const resultEl = document.getElementById("result");
+
+let currentAngle = 0;
+let isSpinning = false;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playClickSound() {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+  } catch (e) {}
+}
+
+function playWinSound() {
+  if (!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "triangle";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.3);
+    });
+  } catch (e) {}
+}
+
+function drawWheel() {
+  const numSegments = prizes.length;
+  const arcSize = (2 * Math.PI) / numSegments;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = centerX - 10;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  prizes.forEach((prize, i) => {
+    const angle = currentAngle + i * arcSize;
+    ctx.beginPath();
+    ctx.fillStyle = prize.color;
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
+    ctx.lineTo(centerX, centerY);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Render segment label text
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(angle + arcSize / 2);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 26px system-ui";
+    ctx.shadowColor = "rgba(0,0,0,0.6)";
+    ctx.shadowBlur = 4;
+    ctx.fillText(prize.label, radius - 30, 8);
+    ctx.restore();
+  });
+}
+
+function pickPrizeIndex() {
+  let total = prizes.reduce((sum, p) => sum + Math.max(0, Number(weights[p.key]) || 0), 0);
+  if (total <= 0) return prizes.length - 1;
+  let rand = Math.random() * total;
+  for (let i = 0; i < prizes.length; i++) {
+    rand -= Math.max(0, Number(weights[p.key]) || 0);
+    if (rand < 0) return i;
+  }
+  return prizes.length - 1;
+}
+
+function spin() {
+  if (isSpinning) return;
+  initAudio();
+
+  const playerName = document.getElementById("player").value.trim();
+  if (!playerName) {
+    resultEl.textContent = "Please enter your name first!";
+    document.getElementById("player").focus();
+    return;
+  }
+
+  isSpinning = true;
+  spinBtn.disabled = true;
+  resultEl.textContent = "Spinning...";
+
+  const prizeIndex = pickPrizeIndex();
+  const numSegments = prizes.length;
+  const arcSize = (2 * Math.PI) / numSegments;
+  
+  // Calculate target rotation to land segment center under the top pointer (-PI / 2)
+  const targetSegmentCenter = prizeIndex * arcSize + arcSize / 2;
+  const desiredAngle = (3 * Math.PI / 2) - targetSegmentCenter;
+  
+  const currentMod = currentAngle % (2 * Math.PI);
+  let diff = (desiredAngle - currentMod) % (2 * Math.PI);
+  if (diff < 0) diff += 2 * Math.PI;
+
+  const fullSpins = (5 + Math.floor(Math.random() * 3)) * 2 * Math.PI;
+  const totalRotation = fullSpins + diff;
+  const startAngle = currentAngle;
+  const duration = 4000;
+  const startTime = performance.now();
+  
+  let lastAudioSegment = -1;
+
+  function animate(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Cubic ease-out formula
+    const easeOut = 1 - Math.pow(1 - progress, 3);
+    currentAngle = startAngle + totalRotation * easeOut;
+    drawWheel();
+
+    // Sound effect on crossing segment boundaries
+    const currentSegment = Math.floor((currentAngle % (2 * Math.PI)) / arcSize);
+    if (currentSegment !== lastAudioSegment) {
+      playClickSound();
+      lastAudioSegment = currentSegment;
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinning = false;
+      spinBtn.disabled = false;
+      const wonPrize = prizes[prizeIndex];
+
+      if (wonPrize.label === "Better Luck") {
+        resultEl.textContent = "Better luck next time!";
+      } else {
+        resultEl.textContent = `🎉 You won ${wonPrize.label}!`;
+        playWinSound();
+      }
+
+      history.unshift({
+        name: playerName,
+        prize: wonPrize.label,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      saveHistory();
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function saveHistory() {
+  localStorage.setItem("sw_history", JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const el = document.getElementById("history");
+  if (!history.length) {
+    el.innerHTML = '<p class="small">Your spins will appear here.</p>';
+    return;
+  }
+  el.innerHTML = history.slice(0, 20).map(h => `
+    <div class="history-item">
+      <div>
+        <b>${escapeHtml(h.name)}</b>
+        <small>${escapeHtml(h.date)}</small>
+      </div>
+      <b>${escapeHtml(h.prize)}</b>
+    </div>
+  `).join("");
+}
+
+// Admin Panel Listeners
+const admin = document.getElementById("admin");
+document.getElementById("adminBtn").addEventListener("click", () => {
+  admin.style.display = admin.style.display === "block" ? "none" : "block";
+});
+
+document.getElementById("pin").addEventListener("input", e => {
+  if (e.target.value === pinCode) {
+    document.getElementById("adminControls").style.display = "block";
+    document.getElementById("adminMsg").textContent = "Admin unlocked.";
+    loadWeights();
+  } else {
+    document.getElementById("adminControls").style.display = "none";
+    document.getElementById("adminMsg").textContent = "Enter PIN to unlock settings.";
+  }
+});
+
+function loadWeights() {
+  for (const p of prizes) {
+    const el = document.getElementById(p.key);
+    if (el) el.value = weights[p.key] ?? 0;
+  }
+}
+
+document.getElementById("saveWeights").addEventListener("click", () => {
+  const next = {};
+  for (const p of prizes) {
+    next[p.key] = Math.max(0, Math.min(1000, Number(document.getElementById(p.key).value) || 0));
+  }
+  if (Object.values(next).every(v => v === 0)) {
+    alert("At least one outcome weight must be greater than zero.");
+    return;
+  }
+  weights = next;
+  localStorage.setItem("sw_weights", JSON.stringify(weights));
+  document.getElementById("adminMsg").textContent = "Chances saved successfully!";
+});
+
+document.getElementById("changePin").addEventListener("click", () => {
+  const next = prompt("Enter new PIN (at least 4 characters):");
+  if (next && next.trim().length >= 4) {
+    pinCode = next.trim();
+    localStorage.setItem("sw_pin", pinCode);
+    document.getElementById("pin").value = "";
+    document.getElementById("adminControls").style.display = "none";
+    document.getElementById("adminMsg").textContent = "PIN updated successfully.";
+  } else if (next !== null) {
+    alert("PIN must be at least 4 characters long.");
+  }
+});
+
+document.getElementById("clearHistory").addEventListener("click", () => {
+  if (confirm("Clear all spin history on this device?")) {
+    history = [];
+    saveHistory();
+  }
+});
+
+spinBtn.addEventListener("click", spin);
+
+drawWheel();
+renderHistory();
+</script>
+</body>
+</html>
