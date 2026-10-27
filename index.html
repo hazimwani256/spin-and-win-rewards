@@ -311,7 +311,6 @@ function drawWheel() {
     ctx.lineWidth = 4;
     ctx.stroke();
 
-    // Render segment label text
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(angle + arcSize / 2);
@@ -330,7 +329,7 @@ function pickPrizeIndex() {
   if (total <= 0) return prizes.length - 1;
   let rand = Math.random() * total;
   for (let i = 0; i < prizes.length; i++) {
-    rand -= Math.max(0, Number(weights[p.key]) || 0);
+    rand -= Math.max(0, Number(weights[prizes[i].key]) || 0);
     if (rand < 0) return i;
   }
   return prizes.length - 1;
@@ -355,7 +354,6 @@ function spin() {
   const numSegments = prizes.length;
   const arcSize = (2 * Math.PI) / numSegments;
   
-  // Calculate target rotation to land segment center under the top pointer (-PI / 2)
   const targetSegmentCenter = prizeIndex * arcSize + arcSize / 2;
   const desiredAngle = (3 * Math.PI / 2) - targetSegmentCenter;
   
@@ -375,12 +373,10 @@ function spin() {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     
-    // Cubic ease-out formula
     const easeOut = 1 - Math.pow(1 - progress, 3);
     currentAngle = startAngle + totalRotation * easeOut;
     drawWheel();
 
-    // Sound effect on crossing segment boundaries
     const currentSegment = Math.floor((currentAngle % (2 * Math.PI)) / arcSize);
     if (currentSegment !== lastAudioSegment) {
       playClickSound();
@@ -441,7 +437,6 @@ function renderHistory() {
   `).join("");
 }
 
-// Admin Panel Listeners
 const admin = document.getElementById("admin");
 document.getElementById("adminBtn").addEventListener("click", () => {
   admin.style.display = admin.style.display === "block" ? "none" : "block";
@@ -471,38 +466,4 @@ document.getElementById("saveWeights").addEventListener("click", () => {
     next[p.key] = Math.max(0, Math.min(1000, Number(document.getElementById(p.key).value) || 0));
   }
   if (Object.values(next).every(v => v === 0)) {
-    alert("At least one outcome weight must be greater than zero.");
-    return;
-  }
-  weights = next;
-  localStorage.setItem("sw_weights", JSON.stringify(weights));
-  document.getElementById("adminMsg").textContent = "Chances saved successfully!";
-});
-
-document.getElementById("changePin").addEventListener("click", () => {
-  const next = prompt("Enter new PIN (at least 4 characters):");
-  if (next && next.trim().length >= 4) {
-    pinCode = next.trim();
-    localStorage.setItem("sw_pin", pinCode);
-    document.getElementById("pin").value = "";
-    document.getElementById("adminControls").style.display = "none";
-    document.getElementById("adminMsg").textContent = "PIN updated successfully.";
-  } else if (next !== null) {
-    alert("PIN must be at least 4 characters long.");
-  }
-});
-
-document.getElementById("clearHistory").addEventListener("click", () => {
-  if (confirm("Clear all spin history on this device?")) {
-    history = [];
-    saveHistory();
-  }
-});
-
-spinBtn.addEventListener("click", spin);
-
-drawWheel();
-renderHistory();
-</script>
-</body>
-</html>
+    alert("At least one
